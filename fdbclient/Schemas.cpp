@@ -804,7 +804,8 @@ const KeyRef JSONSchemas::statusSchema = R"statusSchema(
              "memory",
              "memory-1",
              "memory-2",
-             "memory-radixtree-beta"
+             "memory-radixtree-beta",
+             "veb"
          ]},
          "log_spill":1,
          "storage_engine":{
@@ -818,7 +819,8 @@ const KeyRef JSONSchemas::statusSchema = R"statusSchema(
              "memory",
              "memory-1",
              "memory-2",
-             "memory-radixtree-beta"
+             "memory-radixtree-beta",
+             "veb"
          ]},
          "tss_count":1,
          "tss_storage_engine":{
@@ -832,7 +834,8 @@ const KeyRef JSONSchemas::statusSchema = R"statusSchema(
              "memory",
              "memory-1",
              "memory-2",
-             "memory-radixtree-beta"
+             "memory-radixtree-beta",
+             "veb"
          ]},
          "coordinators_count":1,
          "excluded_servers":[

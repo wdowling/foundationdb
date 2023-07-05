@@ -361,6 +361,7 @@ KeyValueStoreSuffix bTreeV1Suffix = { KeyValueStoreType::SSD_BTREE_V1, ".fdb", F
 KeyValueStoreSuffix bTreeV2Suffix = { KeyValueStoreType::SSD_BTREE_V2, ".sqlite", FilesystemCheck::FILES_ONLY };
 KeyValueStoreSuffix memorySuffix = { KeyValueStoreType::MEMORY, "-0.fdq", FilesystemCheck::FILES_ONLY };
 KeyValueStoreSuffix memoryRTSuffix = { KeyValueStoreType::MEMORY_RADIXTREE, "-0.fdr", FilesystemCheck::FILES_ONLY };
+KeyValueStoreSuffix memoryVEBSuffix = { KeyValueStoreType::VEB, "-0.fdv", FilesystemCheck::FILES_ONLY };
 KeyValueStoreSuffix redwoodSuffix = { KeyValueStoreType::SSD_REDWOOD_V1, ".redwood-v1", FilesystemCheck::FILES_ONLY };
 KeyValueStoreSuffix rocksdbSuffix = { KeyValueStoreType::SSD_ROCKSDB_V1,
 	                                  ".rocksdb",
@@ -376,7 +377,8 @@ std::string filenameFromSample(KeyValueStoreType storeType, std::string folder, 
 		return joinPath(folder, sample_filename);
 	else if (storeType == KeyValueStoreType::SSD_BTREE_V2)
 		return joinPath(folder, sample_filename);
-	else if (storeType == KeyValueStoreType::MEMORY || storeType == KeyValueStoreType::MEMORY_RADIXTREE)
+	else if (storeType == KeyValueStoreType::MEMORY || storeType == KeyValueStoreType::MEMORY_RADIXTREE || 
+		storeType == KeyValueStoreType::VEB)
 		return joinPath(folder, sample_filename.substr(0, sample_filename.size() - 5));
 	else if (storeType == KeyValueStoreType::SSD_REDWOOD_V1)
 		return joinPath(folder, sample_filename);
@@ -393,7 +395,8 @@ std::string filenameFromId(KeyValueStoreType storeType, std::string folder, std:
 		return joinPath(folder, prefix + id.toString() + ".fdb");
 	else if (storeType == KeyValueStoreType::SSD_BTREE_V2)
 		return joinPath(folder, prefix + id.toString() + ".sqlite");
-	else if (storeType == KeyValueStoreType::MEMORY || storeType == KeyValueStoreType::MEMORY_RADIXTREE)
+	else if (storeType == KeyValueStoreType::MEMORY || storeType == KeyValueStoreType::MEMORY_RADIXTREE ||
+		storeType == KeyValueStoreType::VEB)
 		return joinPath(folder, prefix + id.toString() + "-");
 	else if (storeType == KeyValueStoreType::SSD_REDWOOD_V1)
 		return joinPath(folder, prefix + id.toString() + ".redwood-v1");
@@ -583,6 +586,8 @@ std::vector<DiskStore> getDiskStores(std::string folder) {
 	auto result6 =
 	    getDiskStores(folder, shardedRocksdbSuffix.suffix, shardedRocksdbSuffix.type, shardedRocksdbSuffix.check);
 	result.insert(result.end(), result6.begin(), result6.end());
+	auto result7 = getDiskStores(folder, memoryVEBSuffix.suffix, memoryVEBSuffix.type, memoryVEBSuffix.check);
+	result.insert(result.end(), result7.begin(), result7.end());
 	return result;
 }
 
@@ -3182,9 +3187,11 @@ ACTOR Future<Void> workerServer(Reference<IClusterConnectionRecord> connRecord,
 							           fileExists(joinPath(d.filename, "IDENTITY"));
 						} else if (d.storeType == KeyValueStoreType::MEMORY) {
 							included = fileExists(d.filename + "1.fdq");
-						} else {
-							ASSERT(d.storeType == KeyValueStoreType::MEMORY_RADIXTREE);
+						} else if (d.storeType == KeyValueStoreType::MEMORY_RADIXTREE) {
 							included = fileExists(d.filename + "1.fdr");
+						} else {
+							ASSERT(d.storeType == KeyValueStoreType::VEB);
+							included = fileExists(d.filename + "1.fdv");
 						}
 						if (d.storedComponent == DiskStore::COMPONENT::TLogData && included) {
 							included = false;

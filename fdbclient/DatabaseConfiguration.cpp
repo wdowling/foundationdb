@@ -617,7 +617,8 @@ bool DatabaseConfiguration::setInternal(KeyRef key, ValueRef value) {
 		// It makes no sense to use a memory based engine to spill data that doesn't fit in memory
 		// so change these to an ssd-2
 		if (tLogDataStoreType == KeyValueStoreType::MEMORY ||
-		    tLogDataStoreType == KeyValueStoreType::MEMORY_RADIXTREE) {
+		    tLogDataStoreType == KeyValueStoreType::MEMORY_RADIXTREE ||
+			tLogDataStoreType == KeyValueStoreType::VEB) {
 			tLogDataStoreType = KeyValueStoreType::SSD_BTREE_V2;
 		}
 	} else if (ck == "log_spill"_sr) {

@@ -30,6 +30,7 @@
 #include "fdbserver/IKeyValueContainer.h"
 #include "fdbserver/IKeyValueStore.h"
 #include "fdbserver/RadixTree.h"
+#include "fdbserver/VEB.h"
 #include "flow/ActorCollection.h"
 #include "flow/EncryptUtils.h"
 #include "flow/Knobs.h"

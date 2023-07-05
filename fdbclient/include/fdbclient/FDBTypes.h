@@ -976,6 +976,7 @@ struct KeyValueStoreType {
 		MEMORY_RADIXTREE = 4,
 		SSD_ROCKSDB_V1 = 5,
 		SSD_SHARDED_ROCKSDB = 6,
+		VEB = 7,
 		END
 	};
 
