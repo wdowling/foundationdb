@@ -18,6 +18,7 @@
  * limitations under the License.
  */
 
+#include "fdbclient/FDBTypes.h"
 #include "fdbserver/ServerDBInfo.actor.h"
 #include "fdbserver/IKeyValueStore.h"
 #include "flow/flow.h"
@@ -63,6 +64,12 @@ IKeyValueStore* openKVStore(KeyValueStoreType storeType,
 		                           memoryLimit,
 		                           "fdr",
 		                           KeyValueStoreType::MEMORY_RADIXTREE); // for radixTree type, set file ext to "fdr"
+	case KeyValueStoreType::VEB:
+		return keyValueStoreMemory(filename,
+								   logID,
+								   memoryLimit,
+							  "fdv",
+						KeyValueStoreType::VEB);
 	default:
 		UNREACHABLE();
 	}

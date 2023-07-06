@@ -424,6 +424,7 @@ public:
 	//	3 = "ssd-redwood-1"
 	//	4 = "ssd-rocksdb-v1"
 	//	5 = "ssd-sharded-rocksdb"
+	//  6 = "veb"
 	// Requires a comma-separated list of numbers WITHOUT whitespaces
 	std::vector<int> storageEngineExcludeTypes;
 	Optional<int> datacenters, stderrSeverity, processesPerMachine;
@@ -1752,6 +1753,11 @@ void SimulationConfig::setStorageEngine(const TestConfig& testConfig) {
 		TraceEvent(SevWarnAlways, "ShardedRocksDBNonDeterminism")
 		    .detail("Explanation", "The Sharded RocksDB storage engine is threaded and non-deterministic");
 		noUnseed = true;
+		break;
+	}
+	case 6: {
+		CODE_PROBE(true, "Simulated cluster using VEB storage engine");
+		set_config("veb");
 		break;
 	}
 	default:

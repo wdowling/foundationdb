@@ -33,3 +33,11 @@
 
 #include "fdbserver/IKeyValueContainer.h"
 #include "flow/Arena.h"
+
+class veb {
+public:
+	typedef std::size_t size_type;
+
+};
+
+#endif

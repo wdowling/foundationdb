@@ -451,6 +451,9 @@ struct ConfigureDatabaseWorkload : TestWorkload {
 					// Experimental suffix is still supported so test it
 					storeTypeStr = BUGGIFY ? "ssd-redwood-1" : "ssd-redwood-1-experimental";
 					break;
+				case 4:
+					storeTypeStr = "veb";
+					break;
 				default:
 					ASSERT(false);
 				}
